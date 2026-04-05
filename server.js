@@ -166,6 +166,8 @@ router.route('/movies/:movieparameter')
 router.post("/reviews", authJwtController.isAuthenticated, async (req, res) => {
     if (!req.body.movieId || req.body.movieId.length === 0)
         return res.status(400).json({ success: false, message: "No Movie Id Provided" });
+    if (!req.body.username)
+        return res.status(400).json({ success: false, message: "Username not provided" });
     try {
         const review = new Reviews({
             movieId: req.body.movieId,
