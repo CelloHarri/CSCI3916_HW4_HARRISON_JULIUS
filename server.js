@@ -181,7 +181,7 @@ router.post("/reviews", authJwtController.isAuthenticated, async (req, res) => {
 })
 
 router.route('/reviews/:id')
-    .get(authJwtController.isAuthenticated, async (req, res) => {
+    .get(async (req, res) => {
         try {
             const review = await Reviews.findById(req.params.id)
             if (!review) {
