@@ -169,6 +169,9 @@ router.post("/reviews", authJwtController.isAuthenticated, async (req, res) => {
         return res.status(400).json({ success: false, message: "No Movie Id Provided" });
     if (!req.body.username)
         return res.status(400).json({ success: false, message: "Username not provided" });
+    const movie = await Movie.findById(req.body.movieId)
+    if (!movie)
+        return res.status(404).json({ success: false, message: "Movie Does Not Exist" });
     try {
         const review = new Reviews({
             movieId: req.body.movieId,
