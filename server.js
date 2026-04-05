@@ -154,6 +154,7 @@ router.route('/movies/:movieparameter')
             if (!movie) {
                 return res.status(404).json({ success: false, message: "Movie Not Found" });
             }
+            await Reviews.deleteMany({ movieId: movie._id });
             res.status(200).json({ success: true, message: "Movie deleted", movie });
         } catch (err) {
             res.status(500).json({ success: false, message: err.message });
