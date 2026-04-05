@@ -163,21 +163,33 @@ router.route('/movies/:movieparameter')
         res.status(405).json({ success: false, message: "Non-Supported Action" });
     })
 
-router.route('/reviews')
-    .post(authJwtController.isAuthenticated, async (req, res) => {
-        if (!req.body.movieId || req.body.movieId.length === 0)
-            return res.status(400).json({ success: false, message: "No Movie Id Provided" });
+router.post("/reviews", authJwtController.isAuthenticated, async (req, res) => {
+    if (!req.body.movieId || req.body.movieId.length === 0)
+        return res.status(400).json({ success: false, message: "No Movie Id Provided" });
+    try {
+        const review = new Reviews({
+            movieId: req.body.movieId,
+            username: req.body.username,
+            review: req.body.review,
+            rating: req.body.rating
+        });
+        await review.save();
+        res.status(200).json({ success: true, message: "Review created!" });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+})
+
+router.route('/reviews/:id')
+    .get(authJwtController.isAuthenticated, async (req, res) => {
         try {
-            const review = new Reviews({
-                movieId: req.body.movieId,
-                username: req.body.username,
-                review: req.body.review,
-                rating: req.body.rating
-            });
-            await review.save();
-            res.status(200).json({ success: true, message: "Review created!" });
+            const review = await Reviews.findById(req.params.id)
+            if (!review) {
+                return res.status(404).json({ success: false, message: 'Review Not Found' })
+            }
+            return res.status(200).json({ success: true, review })
         } catch (err) {
-            res.status(500).json({ success: false, message: err.message });
+            res.status(500).json({ success: false, message: err.message })
         }
     })
     .delete(authJwtController.isAuthenticated, async (req, res) => {
