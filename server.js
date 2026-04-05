@@ -110,7 +110,7 @@ router.route('/movies/:movieparameter')
         try {
             if (req.query.reviews === 'true') {
                 const result = await Movie.aggregate([
-                    { $match: { _id: new mongoose.Types.ObjectId(req.params.movieparameter) } },
+                    { $match: { title: req.params.movieparameter } },
                     {
                         $lookup: {
                             from: 'reviews',
