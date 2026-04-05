@@ -174,7 +174,7 @@ router.post("/reviews", authJwtController.isAuthenticated, async (req, res) => {
             rating: req.body.rating
         });
         await review.save();
-        res.status(200).json({ success: true, message: "Review created!" });
+        res.status(200).json({ success: true, message: "Review created!", body: review });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
     }
